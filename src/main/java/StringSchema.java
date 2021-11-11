@@ -1,43 +1,48 @@
-public final class StringSchema {
-    private boolean required;
+public final class StringSchema extends BaseSchema {
+
     private String contains = "";
     private int minLength = -1;
 
-    public boolean isValid(String strIn) {
+    @Override
+    public boolean isValid(Object objIn) {
 
-        if (required) {
-            if (strIn == null) {
+        if (this.isRequired()) {
+            if (this.isNull(objIn)) {
                 return false;
-            } else {
-                return !strIn.trim().isEmpty();
             }
-        } else if (!contains.isEmpty()) {
-            return strIn.contains(contains);
-        } else if (minLength != -1) {
-            return strIn.trim().length() == minLength || strIn.trim().length() < minLength;
+            if (!(objIn instanceof String)) {
+                return false;
+            }
+            String strIn = (String) objIn;
+            if (strIn.trim().isEmpty()) {
+                return false;
+            }
+            if (!contains.isEmpty()) {
+                if (!strIn.contains(contains)) {
+                    return false;
+                }
+            }
+            if (minLength != -1) {
+                if (!(strIn.trim().length() == minLength || strIn.trim().length() < minLength)) {
+                    return false;
+                }
+            }
         }
         return true;
     }
 
-    public void required() {
-        nullMode();
-        required = true;
-    }
-
-    private void nullMode() {
-        required = false;
-        contains = "";
-        minLength = -1;
+    @Override
+    public StringSchema required() {
+        setRequired(true);
+        return this;
     }
 
     public StringSchema contains(String strIn) {
-        nullMode();
         contains = strIn;
         return this;
     }
 
     public StringSchema minLength(int intIn) {
-        nullMode();
         minLength = intIn;
         return this;
     }
