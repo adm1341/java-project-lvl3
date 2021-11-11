@@ -6,14 +6,11 @@ public final class MapSchema extends BaseSchema {
     @Override
     public boolean isValid(Object objIn) {
 
-        if (this.isRequired()) {
-            if (this.isNull(objIn)) {
-                return false;
-            }
-            if (!(objIn instanceof Map)) {
-                return false;
-            }
-            if (sizeof != -1) {
+        if (!checkRequired(objIn)) {
+            return false;
+        }
+        if (sizeof != -1) {
+            if (checkRequired(objIn)) {
                 Map<Object, Object> mapIn = (Map) objIn;
                 if (mapIn.size() < sizeof) {
                     return false;
@@ -27,6 +24,16 @@ public final class MapSchema extends BaseSchema {
     public MapSchema required() {
         setRequired(true);
         return this;
+    }
+
+    private boolean checkRequired(Object objIn) {
+        if (this.isRequired()) {
+            if (this.isNull(objIn)) {
+                return false;
+            }
+            return objIn instanceof Map;
+        }
+        return true;
     }
 
     public MapSchema sizeof(int intIn) {
