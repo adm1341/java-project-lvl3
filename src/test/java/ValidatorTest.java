@@ -10,10 +10,18 @@ public class ValidatorTest {
 
         assertTrue(v.string() instanceof StringSchema);
     }
+
     @Test
     public void testInstantNumberSchema() {
         Validator v = new Validator();
 
         assertTrue(v.number() instanceof NumberSchema);
+    }
+
+    @Test
+    public void testInstantMapSchema() {
+        Validator v = new Validator();
+
+        assertTrue(v.map() instanceof MapSchema);
     }
 }
