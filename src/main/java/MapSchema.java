@@ -6,16 +6,8 @@ public final class MapSchema extends BaseSchema {
     @Override
     public boolean isValid(Object objIn) {
 
-        if (!checkRequired(objIn)) {
+        if (!checkRequired(objIn) || !checkSizeof(objIn)) {
             return false;
-        }
-        if (sizeof != -1) {
-            if (checkRequired(objIn)) {
-                Map<Object, Object> mapIn = (Map) objIn;
-                if (mapIn.size() < sizeof) {
-                    return false;
-                }
-            }
         }
         return true;
     }
@@ -28,12 +20,25 @@ public final class MapSchema extends BaseSchema {
 
     private boolean checkRequired(Object objIn) {
         if (this.isRequired()) {
-            if (this.isNull(objIn)) {
-                return false;
-            }
-            return objIn instanceof Map;
+            return checkNullAndType(objIn);
         }
         return true;
+    }
+
+    private boolean checkSizeof(Object objIn) {
+        if (sizeof != -1) {
+            if (checkNullAndType(objIn)) {
+                Map<Object, Object> mapIn = (Map) objIn;
+                if (mapIn.size() < sizeof) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkNullAndType(Object objIn) {
+        return !this.isNull(objIn) && objIn instanceof Map;
     }
 
     public MapSchema sizeof(int intIn) {

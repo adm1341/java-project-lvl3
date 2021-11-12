@@ -14,23 +14,9 @@ public final class StringSchema extends BaseSchema {
                 return false;
             }
         }
-        if (!contains.isEmpty()) {
-            if (checkRequired(objIn)) {
-                String strIn = (String) objIn;
-                if (!strIn.contains(contains)) {
-                    return false;
-                }
-            }
+        if (!checkContains(objIn) || !checkMinLength(objIn)) {
+            return false;
         }
-        if (minLength != -1) {
-            if (checkRequired(objIn)) {
-                String strIn = (String) objIn;
-                if (!(strIn.trim().length() == minLength || strIn.trim().length() < minLength)) {
-                    return false;
-                }
-            }
-        }
-
         return true;
     }
 
@@ -42,10 +28,35 @@ public final class StringSchema extends BaseSchema {
 
     private boolean checkRequired(Object objIn) {
         if (this.isRequired()) {
-            if (this.isNull(objIn)) {
-                return false;
+            return checkNullAndType(objIn);
+        }
+        return true;
+    }
+
+    private boolean checkNullAndType(Object objIn) {
+        return !this.isNull(objIn) && objIn instanceof String;
+    }
+
+    private boolean checkContains(Object objIn) {
+        if (!contains.isEmpty()) {
+            if (checkNullAndType(objIn)) {
+                String strIn = (String) objIn;
+                if (!strIn.contains(contains)) {
+                    return false;
+                }
             }
-            return objIn instanceof String;
+        }
+        return true;
+    }
+
+    private boolean checkMinLength(Object objIn) {
+        if (minLength != -1) {
+            if (checkNullAndType(objIn)) {
+                String strIn = (String) objIn;
+                if (!(strIn.trim().length() == minLength || strIn.trim().length() < minLength)) {
+                    return false;
+                }
+            }
         }
         return true;
     }
