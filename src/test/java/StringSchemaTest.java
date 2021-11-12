@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StringSchemaTest {
-
+    static final int FIVE = 5;
     @Test
     public void testNoParam() {
         Validator v = new Validator();
@@ -42,6 +42,6 @@ public class StringSchemaTest {
         StringSchema schema = v.string();
         schema.required();
         assertTrue(schema.minLength(2).isValid("fo")); // true
-        assertFalse(schema.minLength(1).isValid("what")); // false
+        assertFalse(schema.minLength(FIVE).isValid("what")); // false
     }
 }

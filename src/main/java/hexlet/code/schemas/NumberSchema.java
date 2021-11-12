@@ -32,7 +32,7 @@ public final class NumberSchema extends BaseSchema {
     private boolean checkPositive(Object objIn) {
         if (this.positive) {
             if (checkNullAndType(objIn)) {
-                return ((Integer) objIn) >= 0;
+                return ((Integer) objIn) > 0;
             }
         }
         return true;

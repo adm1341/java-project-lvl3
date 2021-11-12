@@ -45,7 +45,7 @@ public final class StringSchema extends BaseSchema {
         if (minLength != -1) {
             if (checkNullAndType(objIn)) {
                 String strIn = (String) objIn;
-                return strIn.trim().length() == minLength || strIn.trim().length() < minLength;
+                return strIn.trim().length() == minLength || strIn.trim().length() > minLength;
             }
         }
         return true;
