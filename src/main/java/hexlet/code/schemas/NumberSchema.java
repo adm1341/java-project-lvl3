@@ -1,3 +1,5 @@
+package hexlet.code.schemas;
+
 public final class NumberSchema extends BaseSchema {
 
     private boolean positive;

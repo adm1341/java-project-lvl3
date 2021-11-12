@@ -1,3 +1,5 @@
+package hexlet.code.schemas;
+
 public class BaseSchema {
     private boolean required;
 

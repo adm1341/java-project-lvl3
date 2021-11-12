@@ -1,3 +1,5 @@
+package hexlet.code.schemas;
+
 public final class StringSchema extends BaseSchema {
 
     private String contains = "";
