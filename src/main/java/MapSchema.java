@@ -1,15 +1,14 @@
+import java.util.HashMap;
 import java.util.Map;
 
 public final class MapSchema extends BaseSchema {
     private int sizeof = -1;
+    private Map<String, BaseSchema> shapeSchem = new HashMap<>();
 
     @Override
     public boolean isValid(Object objIn) {
 
-        if (!checkRequired(objIn) || !checkSizeof(objIn)) {
-            return false;
-        }
-        return true;
+        return checkRequired(objIn) && checkSizeof(objIn) && checkShape(objIn);
     }
 
     @Override
@@ -21,6 +20,25 @@ public final class MapSchema extends BaseSchema {
     private boolean checkRequired(Object objIn) {
         if (this.isRequired()) {
             return checkNullAndType(objIn);
+        }
+        return true;
+    }
+
+    private boolean checkShape(Object objIn) {
+        if (shapeSchem.size() > 0) {
+            if (checkNullAndType(objIn)) {
+                Map<String, Object> mapIn = (Map<String, Object>) objIn;
+                for (Map.Entry<String, Object> entry : mapIn.entrySet()) {
+                    if (shapeSchem.containsKey(entry.getKey())) {
+                        BaseSchema schemaCheck = shapeSchem.get(entry.getKey());
+                        if (!schemaCheck.isValid(entry.getValue())) {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
         }
         return true;
     }
@@ -43,6 +61,11 @@ public final class MapSchema extends BaseSchema {
 
     public MapSchema sizeof(int intIn) {
         sizeof = intIn;
+        return this;
+    }
+
+    public MapSchema shape(Map<String, BaseSchema> shapeSchemIn) {
+        shapeSchem = shapeSchemIn;
         return this;
     }
 }
