@@ -7,11 +7,7 @@ public final class NumberSchema extends BaseSchema {
     @Override
     public boolean isValid(Object objIn) {
 
-        if (!checkRequired(objIn) || !checkPositive(objIn) || !checkRange(objIn)) {
-            return false;
-        }
-
-        return true;
+        return checkRequired(objIn) && checkPositive(objIn) && checkRange(objIn);
     }
 
     @Override
@@ -34,9 +30,7 @@ public final class NumberSchema extends BaseSchema {
     private boolean checkPositive(Object objIn) {
         if (this.positive) {
             if (checkNullAndType(objIn)) {
-                if (((Integer) objIn) < 0) {
-                    return false;
-                }
+                return ((Integer) objIn) >= 0;
             }
         }
         return true;
@@ -46,9 +40,7 @@ public final class NumberSchema extends BaseSchema {
         if (one != -1 || two != -1) {
             if (checkNullAndType(objIn)) {
                 int integer = ((Integer) objIn);
-                if (!(integer >= one && integer <= two)) {
-                    return false;
-                }
+                return integer >= one && integer <= two;
             }
         }
         return true;

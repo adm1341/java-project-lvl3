@@ -5,19 +5,7 @@ public final class StringSchema extends BaseSchema {
 
     @Override
     public boolean isValid(Object objIn) {
-
-        if (!checkRequired(objIn)) {
-            return false;
-        } else if (this.isRequired()) {
-            String strIn = (String) objIn;
-            if (strIn.trim().isEmpty()) {
-                return false;
-            }
-        }
-        if (!checkContains(objIn) || !checkMinLength(objIn)) {
-            return false;
-        }
-        return true;
+        return checkRequired(objIn) && checkContains(objIn) && checkMinLength(objIn);
     }
 
     @Override
@@ -28,7 +16,11 @@ public final class StringSchema extends BaseSchema {
 
     private boolean checkRequired(Object objIn) {
         if (this.isRequired()) {
-            return checkNullAndType(objIn);
+            if (!checkNullAndType(objIn)) {
+                return false;
+            }
+            String strIn = (String) objIn;
+            return !strIn.trim().isEmpty();
         }
         return true;
     }
@@ -41,9 +33,7 @@ public final class StringSchema extends BaseSchema {
         if (!contains.isEmpty()) {
             if (checkNullAndType(objIn)) {
                 String strIn = (String) objIn;
-                if (!strIn.contains(contains)) {
-                    return false;
-                }
+                return strIn.contains(contains);
             }
         }
         return true;
@@ -53,9 +43,7 @@ public final class StringSchema extends BaseSchema {
         if (minLength != -1) {
             if (checkNullAndType(objIn)) {
                 String strIn = (String) objIn;
-                if (!(strIn.trim().length() == minLength || strIn.trim().length() < minLength)) {
-                    return false;
-                }
+                return strIn.trim().length() == minLength || strIn.trim().length() < minLength;
             }
         }
         return true;

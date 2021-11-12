@@ -25,19 +25,19 @@ public final class MapSchema extends BaseSchema {
     }
 
     private boolean checkShape(Object objIn) {
-        if (shapeSchem.size() > 0) {
-            if (checkNullAndType(objIn)) {
-                Map<String, Object> mapIn = (Map<String, Object>) objIn;
-                for (Map.Entry<String, Object> entry : mapIn.entrySet()) {
-                    if (shapeSchem.containsKey(entry.getKey())) {
-                        BaseSchema schemaCheck = shapeSchem.get(entry.getKey());
-                        if (!schemaCheck.isValid(entry.getValue())) {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
+        return shapeSchem.size() <= 0 || !checkNullAndType(objIn) || checkMapNested(objIn);
+    }
+
+    private boolean checkMapNested(Object objIn) {
+        Map<String, Object> mapIn = (Map<String, Object>) objIn;
+        for (Map.Entry<String, Object> entry : mapIn.entrySet()) {
+            if (shapeSchem.containsKey(entry.getKey())) {
+                BaseSchema schemaCheck = shapeSchem.get(entry.getKey());
+                if (!schemaCheck.isValid(entry.getValue())) {
+                    return false;
                 }
+            } else {
+                return false;
             }
         }
         return true;
@@ -46,10 +46,8 @@ public final class MapSchema extends BaseSchema {
     private boolean checkSizeof(Object objIn) {
         if (sizeof != -1) {
             if (checkNullAndType(objIn)) {
-                Map<Object, Object> mapIn = (Map) objIn;
-                if (mapIn.size() < sizeof) {
-                    return false;
-                }
+                Map<Object, Object> mapIn = (Map<Object, Object>) objIn;
+                return mapIn.size() >= sizeof;
             }
         }
         return true;
