@@ -1,63 +1,42 @@
 package hexlet.code.schemas;
 
+import java.util.Objects;
+import java.util.function.Predicate;
+
 public final class StringSchema extends BaseSchema {
-
-    private String contains = "";
-    private int minLength = -1;
-
-    @Override
-    public boolean isValid(Object objIn) {
-        return checkRequired(objIn) && checkContains(objIn) && checkMinLength(objIn);
-    }
 
     @Override
     public StringSchema required() {
-        setRequired(true);
+        Predicate<Object> isNull = Objects::isNull;
+        Predicate<Object> isNotString = x -> !(x instanceof String);
+        Predicate<Object> isEmpty = x -> ((String) x).trim().isEmpty();
+        addPredicateList(isNull);
+        addPredicateList(isNotString);
+        addPredicateList(isEmpty);
         return this;
     }
 
-    private boolean checkRequired(Object objIn) {
-        if (this.isRequired()) {
-            if (!checkNullAndType(objIn)) {
-                return false;
-            }
-            String strIn = (String) objIn;
-            return !strIn.trim().isEmpty();
-        }
-        return true;
-    }
-
-    private boolean checkNullAndType(Object objIn) {
-        return !this.isNull(objIn) && objIn instanceof String;
-    }
-
-    private boolean checkContains(Object objIn) {
-        if (!contains.isEmpty()) {
-            if (checkNullAndType(objIn)) {
-                String strIn = (String) objIn;
-                return strIn.contains(contains);
-            }
-        }
-        return true;
-    }
-
-    private boolean checkMinLength(Object objIn) {
-        if (minLength != -1) {
-            if (checkNullAndType(objIn)) {
-                String strIn = (String) objIn;
-                return strIn.trim().length() == minLength || strIn.trim().length() > minLength;
-            }
-        }
-        return true;
-    }
-
     public StringSchema contains(String strIn) {
-        contains = strIn;
+        Predicate<Object> isNull = Objects::isNull;
+        Predicate<Object> isNotString = x -> !(x instanceof String);
+        Predicate<Object> isNoContains = x -> !((String) x).contains(strIn);
+        addPredicateList(isNull);
+        addPredicateList(isNotString);
+        addPredicateList(isNoContains);
         return this;
     }
 
     public StringSchema minLength(int intIn) {
-        minLength = intIn;
+        Predicate<Object> isNull = Objects::isNull;
+        Predicate<Object> isNotString = x -> !(x instanceof String);
+
+        Predicate<Object> isLengthEqMinLenLength = x -> ((String) x).trim().length() == intIn;
+        Predicate<Object> isLengthMoreMinLenLength = x -> ((String) x).trim().length() > intIn;
+        Predicate<Object> isNotCorrectLength = isLengthEqMinLenLength.or(isLengthMoreMinLenLength).negate();
+
+        addPredicateList(isNull);
+        addPredicateList(isNotString);
+        addPredicateList(isNotCorrectLength);
         return this;
     }
 }

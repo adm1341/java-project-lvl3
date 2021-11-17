@@ -1,7 +1,12 @@
 package hexlet.code.schemas;
 
-public class BaseSchema {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+public abstract class BaseSchema {
     private boolean required;
+    private final List<Predicate<Object>>  predicateList = new ArrayList<>();
 
     /**
      * @param objIn
@@ -16,7 +21,13 @@ public class BaseSchema {
      * @return boolean
      */
     public boolean isValid(Object objIn) {
-        return !isNull(objIn);
+
+        for (Predicate<Object> predicate : this.predicateList) {
+            if (predicate.test(objIn)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -39,5 +50,12 @@ public class BaseSchema {
      */
     public void setRequired(boolean requiredIn) {
         this.required = requiredIn;
+    }
+
+    /**
+     * @param predicate
+     */
+    protected void addPredicateList(Predicate<Object> predicate) {
+        this.predicateList.add(predicate);
     }
 }
