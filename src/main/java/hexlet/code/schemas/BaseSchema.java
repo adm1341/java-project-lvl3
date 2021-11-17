@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 public abstract class BaseSchema {
     private boolean required;
-    private final List<Predicate<Object>>  predicateList = new ArrayList<>();
+    private final List<Predicate<Object>> predicateList = new ArrayList<>();
 
     /**
      * @param objIn
@@ -33,10 +33,7 @@ public abstract class BaseSchema {
     /**
      * @return Schem
      */
-    public BaseSchema required() {
-        setRequired(true);
-        return this;
-    }
+    public abstract BaseSchema required();
 
     /**
      * @return required
