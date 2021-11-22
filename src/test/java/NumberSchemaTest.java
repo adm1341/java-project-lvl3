@@ -33,9 +33,9 @@ public class NumberSchemaTest {
     public void testPositive() {
         Validator v = new Validator();
         NumberSchema schema = v.number();
-        schema.required();
         assertTrue(schema.positive().isValid(TEN)); // true
         assertFalse(schema.isValid(-TEN)); // false
+        assertTrue(schema.positive().isValid(null)); // true
     }
 
     @Test

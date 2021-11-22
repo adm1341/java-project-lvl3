@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class BaseSchema {
-    private final List<Predicate<Object>> predicateList = new ArrayList<>();
+    private final List<Predicate<Object>> checks = new ArrayList<>();
 
     /**
      * @param objIn
@@ -13,8 +13,8 @@ public abstract class BaseSchema {
      */
     public boolean isValid(Object objIn) {
 
-        for (Predicate<Object> predicate : this.predicateList) {
-            if (predicate.test(objIn)) {
+        for (Predicate<Object> predicate : this.checks) {
+            if (!predicate.test(objIn)) {
                 return false;
             }
         }
@@ -30,7 +30,7 @@ public abstract class BaseSchema {
     /**
      * @param predicate
      */
-    protected void addPredicateList(Predicate<Object> predicate) {
-        this.predicateList.add(predicate);
+    protected void addChecks(Predicate<Object> predicate) {
+        this.checks.add(predicate);
     }
 }
